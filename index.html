@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>编程随想出狱倒计时</title>
+    <link rel="icon" type="image/png" href="favicon.png">
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <link rel="apple-touch-icon" href="favicon.png">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Microsoft YaHei", sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 50px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            text-align: center;
+            max-width: 800px;
+            width: 100%;
+        }
+
+        h1 {
+            color: #333;
+            font-size: 2.5em;
+            margin-bottom: 15px;
+            font-weight: 700;
+        }
+
+        .subtitle {
+            color: #666;
+            font-size: 1.2em;
+            margin-bottom: 40px;
+        }
+
+        .countdown {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            flex-wrap: wrap;
+            margin: 40px 0;
+        }
+
+        .time-block {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 15px;
+            padding: 30px;
+            min-width: 120px;
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+            transition: transform 0.3s ease;
+        }
+
+        .time-block:hover {
+            transform: translateY(-5px);
+        }
+
+        .time-number {
+            font-size: 3em;
+            font-weight: bold;
+            color: white;
+            line-height: 1;
+            margin-bottom: 10px;
+        }
+
+        .time-label {
+            font-size: 1em;
+            color: rgba(255, 255, 255, 0.9);
+            font-weight: 500;
+        }
+
+        .info {
+            margin-top: 40px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            color: #666;
+            line-height: 1.8;
+        }
+
+        .info p {
+            margin: 10px 0;
+        }
+
+        .info strong {
+            color: #333;
+        }
+
+        .photo-container {
+            margin: 30px auto;
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 5px solid white;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s ease;
+        }
+
+        .photo-container:hover {
+            transform: scale(1.05);
+        }
+
+        .photo-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 1.8em;
+            }
+
+            .container {
+                padding: 30px 20px;
+            }
+
+            .time-block {
+                min-width: 100px;
+                padding: 20px;
+            }
+
+            .time-number {
+                font-size: 2.5em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>编程随想出狱倒计时</h1>
+        <div class="photo-container">
+            <img src="ruanxiaohuan.jpg" alt="阮晓寰">
+        </div>
+        <div class="subtitle">阮晓寰 离重获自由还有...</div>
+
+        <div class="countdown">
+            <div class="time-block">
+                <div class="time-number" id="years">-</div>
+                <div class="time-label">年</div>
+            </div>
+            <div class="time-block">
+                <div class="time-number" id="months">-</div>
+                <div class="time-label">月</div>
+            </div>
+            <div class="time-block">
+                <div class="time-number" id="days">-</div>
+                <div class="time-label">天</div>
+            </div>
+        </div>
+
+        <div class="info">
+            <p><strong>编程随想</strong>（真名：阮晓寰）</p>
+            <p>2021年5月被捕</p>
+            <p>2023年8月被判处7年有期徒刑</p>
+            <p>预计出狱时间：<strong id="release-date">2028年5月</strong></p>
+        </div>
+    </div>
+
+    <script>
+        // 预计出狱日期：2028年5月10日（从2021年5月10日被捕开始计算7年）
+        const releaseDate = new Date('2028-05-10T00:00:00');
+
+        function updateCountdown() {
+            const now = new Date();
+            const diff = releaseDate - now;
+
+            if (diff <= 0) {
+                // 已经出狱
+                document.querySelectorAll('.time-number').forEach(el => el.textContent = '0');
+                return;
+            }
+
+            // 计算时间差
+            const seconds = Math.floor(diff / 1000);
+            const minutes = Math.floor(seconds / 60);
+            const hours = Math.floor(minutes / 60);
+            const days = Math.floor(hours / 24);
+
+            // 计算年和月
+            const years = Math.floor(days / 365);
+            const remainingDaysAfterYears = days % 365;
+            const months = Math.floor(remainingDaysAfterYears / 30);
+            const remainingDays = remainingDaysAfterYears % 30;
+
+            // 更新显示
+            document.getElementById('years').textContent = years;
+            document.getElementById('months').textContent = months;
+            document.getElementById('days').textContent = remainingDays;
+        }
+
+        // 初始更新
+        updateCountdown();
+
+        // 每小时更新一次
+        setInterval(updateCountdown, 3600000);
+    </script>
+</body>
+</html>
